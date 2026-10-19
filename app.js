@@ -157,6 +157,7 @@ async function toggleSlot(dayIdx, taskKey) {
   } else {
     slot.done = true;
     child.medals += 1;
+    playSuccess();
     celebrate(child.name);
   }
   save();
@@ -360,6 +361,54 @@ function showTab(name) {
   try { localStorage.setItem(TAB_KEY, name); } catch (e) { /* ignore */ }
 }
 
+/* ---------- sound ---------- */
+
+const SOUND_KEY = 'petting-zoo-sound';
+let audioCtx;
+let soundOn = true;
+try { soundOn = localStorage.getItem(SOUND_KEY) !== 'off'; } catch (e) { /* ignore */ }
+
+function bell(ctx, out, freq, start, length, volume) {
+  // A soft bell: a sine tone plus a quieter overtone, fading out.
+  [[1, 1], [2, 0.25], [3, 0.08]].forEach(([mult, amp]) => {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.value = freq * mult;
+    gain.gain.setValueAtTime(0.0001, start);
+    gain.gain.exponentialRampToValueAtTime(volume * amp, start + 0.015);
+    gain.gain.exponentialRampToValueAtTime(0.0001, start + length);
+    osc.connect(gain).connect(out);
+    osc.start(start);
+    osc.stop(start + length + 0.05);
+  });
+}
+
+// Cheerful "well done" jingle: a rising major arpeggio with a little sparkle.
+function playSuccess() {
+  if (!soundOn) return;
+  try {
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const ctx = audioCtx;
+    const out = ctx.createGain();
+    out.gain.value = 0.6;
+    out.connect(ctx.destination);
+    const t = ctx.currentTime + 0.02;
+    [523.25, 659.25, 783.99].forEach((f, i) => bell(ctx, out, f, t + i * 0.1, 0.5, 0.35));
+    bell(ctx, out, 1046.5, t + 0.3, 1.1, 0.4);
+    bell(ctx, out, 1318.5, t + 0.3, 1.1, 0.15);
+    [2093, 2637, 3136].forEach((f, i) => bell(ctx, out, f, t + 0.45 + i * 0.06, 0.35, 0.05));
+  } catch (e) { /* audio unavailable */ }
+}
+
+function renderSoundToggle() {
+  const btn = document.getElementById('soundToggle');
+  btn.textContent = soundOn ? '🔊' : '🔇';
+  btn.setAttribute('aria-label', soundOn ? 'השתקת צלילים' : 'הפעלת צלילים');
+  btn.setAttribute('aria-pressed', soundOn ? 'true' : 'false');
+}
+
 /* ---------- overlays ---------- */
 
 let celebrateTimer;
@@ -433,6 +482,14 @@ function init() {
     state.children.forEach((c) => { c.medals = 0; });
     save();
     render();
+  });
+
+  renderSoundToggle();
+  document.getElementById('soundToggle').addEventListener('click', () => {
+    soundOn = !soundOn;
+    try { localStorage.setItem(SOUND_KEY, soundOn ? 'on' : 'off'); } catch (e) { /* ignore */ }
+    renderSoundToggle();
+    playSuccess();
   });
 
   document.getElementById('celebrate').addEventListener('click', (e) => { e.currentTarget.hidden = true; });

@@ -61,6 +61,18 @@ button, input, select { font: inherit; color: inherit; }
 .brand-icon { font-size: 44px; line-height: 1; }
 .top h1 { margin: 0; font-size: 26px; }
 .week-range { margin: 2px 0 0; opacity: 0.92; font-size: 16px; }
+.sound-toggle {
+  margin-inline-start: auto;
+  border: none;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  width: 52px;
+  height: 52px;
+  font-size: 26px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.sound-toggle:active { background: rgba(255, 255, 255, 0.35); }
 
 .tabs {
   display: flex;

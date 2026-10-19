@@ -1,5 +1,5 @@
 // Offline support: keep the app shell cached so it opens without internet.
-const CACHE = 'petting-zoo-v3';
+const CACHE = 'petting-zoo-v4';
 const SHELL = [
   './',
   'index.html',
