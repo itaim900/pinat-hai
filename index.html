@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#4c9a2a">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="פינת החי">
+  <title>פינת החי שלנו</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <span class="brand-icon" aria-hidden="true">🐰</span>
+      <div>
+        <h1>פינת החי שלנו</h1>
+        <p id="weekRange" class="week-range"></p>
+      </div>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab" role="tab" data-tab="board"><span aria-hidden="true">📅</span> לוח השבוע</button>
+    <button class="tab" role="tab" data-tab="kids"><span aria-hidden="true">🧒</span> המשימות שלי</button>
+    <button class="tab" role="tab" data-tab="manage"><span aria-hidden="true">⚙️</span> הילדים</button>
+  </nav>
+
+  <main>
+    <!-- Weekly board: days down the side, tasks across the top -->
+    <section id="tab-board" class="panel" hidden>
+      <div class="panel-head">
+        <h2>מי עושה מה השבוע?</h2>
+        <button id="editToggle" class="btn btn-ghost" type="button">✏️ שינוי שיבוץ</button>
+      </div>
+      <p class="hint" id="boardHint">לחצו על המשימה כשסיימתם – ותקבלו מדליית זהב! 🥇</p>
+      <div class="table-wrap">
+        <table class="board" id="boardTable"></table>
+      </div>
+    </section>
+
+    <!-- Per-child table: children down the side, days across the top -->
+    <section id="tab-kids" class="panel" hidden>
+      <div class="panel-head">
+        <h2>המשימות של כל ילד</h2>
+      </div>
+      <p class="hint">
+        <span class="legend">🥕 האכלה</span>
+        <span class="legend">💧 השקיה</span>
+        <span class="legend">🧹 ניקיון</span>
+        <span class="legend"><img class="hamster legend-hamster" src="img/hamster-up.svg" alt=""> בוצע</span>
+        <span class="legend"><img class="hamster legend-hamster" src="img/hamster-down.svg" alt=""> לא בוצע</span>
+      </p>
+      <div class="table-wrap">
+        <table class="kids" id="kidsTable"></table>
+      </div>
+    </section>
+
+    <!-- Manage names -->
+    <section id="tab-manage" class="panel" hidden>
+      <div class="panel-head">
+        <h2>הילדים בפינת החי</h2>
+      </div>
+      <form id="addForm" class="add-form" autocomplete="off">
+        <input id="nameInput" type="text" maxlength="20" placeholder="שם הילד/ה" aria-label="שם הילד/ה">
+        <button class="btn btn-primary" type="submit">➕ הוספה</button>
+      </form>
+      <ul id="childList" class="child-list"></ul>
+
+      <div class="actions">
+        <button id="reshuffleBtn" class="btn btn-ghost" type="button">🔀 שיבוץ מחדש של השבוע</button>
+        <button id="resetMedalsBtn" class="btn btn-ghost danger" type="button">🔄 איפוס כל המדליות</button>
+      </div>
+      <p class="hint small">הלוח מתאפס אוטומטית בסוף יום שישי, ומתחיל שבוע חדש עם שיבוץ חדש. המדליות נשמרות.</p>
+    </section>
+  </main>
+
+  <div id="celebrate" class="celebrate" hidden aria-live="polite">
+    <div class="celebrate-card">
+      <div class="medal" aria-hidden="true"><img src="img/hamster-up.svg" alt=""><span>🥇</span></div>
+      <p id="celebrateText"></p>
+    </div>
+  </div>
+
+  <div id="modal" class="modal" hidden role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <p id="modalText"></p>
+      <div class="modal-actions">
+        <button id="modalYes" class="btn btn-primary" type="button">כן</button>
+        <button id="modalNo" class="btn btn-ghost" type="button">ביטול</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

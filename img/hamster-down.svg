@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <!-- ears -->
+  <circle cx="36" cy="24" r="11" fill="#e39b52"/>
+  <circle cx="84" cy="24" r="11" fill="#e39b52"/>
+  <circle cx="36" cy="24" r="6" fill="#f7b3b3"/>
+  <circle cx="84" cy="24" r="6" fill="#f7b3b3"/>
+  <!-- body -->
+  <ellipse cx="60" cy="84" rx="38" ry="32" fill="#e39b52"/>
+  <ellipse cx="60" cy="92" rx="25" ry="21" fill="#fff3e0"/>
+  <!-- feet -->
+  <ellipse cx="44" cy="114" rx="9" ry="5" fill="#f2b9a0"/>
+  <ellipse cx="76" cy="114" rx="9" ry="5" fill="#f2b9a0"/>
+  <!-- head -->
+  <circle cx="60" cy="48" r="31" fill="#e39b52"/>
+  <ellipse cx="60" cy="60" rx="19" ry="14" fill="#fff3e0"/>
+  <!-- sad eyebrows and eyes -->
+  <path d="M41 40 l10 -5 M79 40 l-10 -5" stroke="#2b1d14" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="48" cy="47" r="4.5" fill="#2b1d14"/>
+  <circle cx="72" cy="47" r="4.5" fill="#2b1d14"/>
+  <circle cx="49.5" cy="45.5" r="1.5" fill="#fff"/>
+  <circle cx="73.5" cy="45.5" r="1.5" fill="#fff"/>
+  <!-- tear -->
+  <path d="M44 53 q-3 6 0 8 q3 -2 0 -8z" fill="#7cc4ff"/>
+  <ellipse cx="60" cy="55" rx="4" ry="3" fill="#e2777a"/>
+  <!-- frown -->
+  <path d="M52 67 q8 -8 16 0" stroke="#2b1d14" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- left paw resting -->
+  <ellipse cx="30" cy="84" rx="8" ry="10" fill="#f2c08a" stroke="#b8783c" stroke-width="2"/>
+  <!-- thumbs-down paw -->
+  <g stroke="#b8783c" stroke-width="2.5" fill="#f2c08a" stroke-linejoin="round">
+    <rect x="86" y="80" width="10" height="26" rx="5"/>
+    <rect x="80" y="64" width="26" height="22" rx="8"/>
+    <path d="M84 71 h16 M84 78 h16" fill="none" stroke-linecap="round"/>
+  </g>
+</svg>
