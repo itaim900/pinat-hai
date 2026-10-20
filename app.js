@@ -72,7 +72,7 @@ const fbApp = initializeApp(useEmulator
   : firebaseConfig);
 const auth = initializeAuth(fbApp, { persistence: [indexedDBLocalPersistence, browserLocalPersistence] });
 auth.languageCode = 'he';
-const databaseId = useEmulator ? '(default)' : FIRESTORE_DATABASE;
+const databaseId = FIRESTORE_DATABASE; // same name locally (emulator) and online
 let db;
 try {
   db = initializeFirestore(fbApp, { localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }) }, databaseId);
