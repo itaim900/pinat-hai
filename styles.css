@@ -23,17 +23,20 @@
   --today: #fff1b8;
   --gold: #f6c431;
   --gold-soft: #fff4c7;
-  --feed: #ffe3cc;
-  --water: #d8edff;
-  --clean: #e6f4d9;
+  /* task status: green = done, red = not done yet, strong red = day passed */
+  --done: #d6f5c9;
+  --done-line: #3f9a2a;
+  --todo: #ffe4e4;
+  --todo-line: #f0a8a8;
   --danger: #c0392b;
-  --missed: #f4ece6;
-  --missed-line: #d9a99a;
+  --missed: #ffc4c4;
+  --missed-line: #d64545;
   --radius: 16px;
   --shadow: 0 4px 14px rgba(80, 60, 20, 0.08);
 }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 
 html, body { margin: 0; }
 
@@ -174,12 +177,10 @@ tr.today { background: var(--today); }
   transition: transform 0.1s;
 }
 .slot:active { transform: scale(0.96); }
-.slot.task-feed { background: var(--feed); }
-.slot.task-water { background: var(--water); }
-.slot.task-clean { background: var(--clean); }
-.slot.done { background: var(--gold-soft); border-color: var(--gold); }
+.slot { background: var(--todo); border-color: var(--todo-line); }
+.slot.done { background: var(--done); border-color: var(--done-line); }
 .slot.missed { background: var(--missed); border: 2px dashed var(--missed-line); }
-.slot:disabled { opacity: 0.5; cursor: default; }
+.slot:disabled { opacity: 0.5; cursor: default; background: #f3efe2; border-color: transparent; }
 .slot-name { font-size: 18px; font-weight: bold; word-break: break-word; }
 .slot-status { font-size: 22px; line-height: 1; }
 
@@ -200,14 +201,15 @@ tr.today { background: var(--today); }
   display: inline-flex;
   align-items: center;
   gap: 2px;
-  background: #f3efe2;
+  background: var(--todo);
+  outline: 2px solid var(--todo-line);
   border-radius: 10px;
   padding: 3px 6px;
   font-size: 20px;
   line-height: 1.2;
   white-space: nowrap;
 }
-.chip.done { background: var(--gold-soft); outline: 2px solid var(--gold); }
+.chip.done { background: var(--done); outline: 2px solid var(--done-line); }
 .chip.missed { background: var(--missed); outline: 2px dashed var(--missed-line); }
 
 /* hamster badges */
@@ -248,6 +250,63 @@ tr.today { background: var(--today); }
 .child-medals { white-space: nowrap; }
 
 .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+
+/* ---------- loading, welcome, cards ---------- */
+
+.loading { display: grid; place-items: center; text-align: center; padding: 80px 16px; color: var(--muted); }
+.loading-icon { font-size: 72px; animation: hop 1s ease-in-out infinite; }
+@keyframes hop { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+
+.welcome { max-width: 560px; }
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px;
+  margin-top: 18px;
+}
+.card h2, .card h3 { margin: 0 0 6px; }
+.card .add-form { margin-bottom: 0; }
+.card .actions { margin-top: 10px; }
+.notice {
+  background: var(--gold-soft);
+  border: 2px solid var(--gold);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  margin: 0 0 4px;
+}
+.back-btn { margin-bottom: 12px; }
+.login-form { display: grid; gap: 8px; }
+.field-label { font-size: 0.9em; color: var(--muted); margin-top: 4px; }
+.notice.small { font-size: 0.9em; padding: 8px 12px; }
+.login-form input, .add-form input[dir="ltr"] { text-align: left; }
+.login-form input {
+  border: 2px solid var(--line);
+  border-radius: 999px;
+  padding: 10px 16px;
+  background: #fff;
+  min-width: 0;
+}
+.login-form input:focus { outline: none; border-color: var(--grass); }
+.btn-link { border: none; background: none; color: var(--grass-dark); text-decoration: underline; cursor: pointer; padding: 10px 6px; }
+.center { text-align: center; }
+.center a { color: var(--muted); }
+.class-code { font-size: 1.4em; letter-spacing: 2px; background: var(--gold-soft); padding: 2px 10px; border-radius: 10px; }
+
+.toast {
+  position: fixed;
+  bottom: calc(20px + env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 999px;
+  z-index: 40;
+  max-width: calc(100% - 32px);
+  text-align: center;
+}
+.toast[hidden], .loading[hidden], .welcome[hidden] { display: none; }
 
 /* ---------- celebration ---------- */
 

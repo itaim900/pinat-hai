@@ -1,5 +1,5 @@
 // Offline support: keep the app shell cached so it opens without internet.
-const CACHE = 'petting-zoo-v4b';
+const CACHE = 'petting-zoo-v7';
 const SHELL = [
   './',
   'index.html',
@@ -13,6 +13,8 @@ const SHELL = [
   'img/hamster-down.svg',
   'fonts/varela-round-hebrew.woff2',
   'fonts/varela-round-latin.woff2',
+  'firebase-config.js',
+  'vendor/firebase.js',
 ];
 
 self.addEventListener('install', (e) => {
@@ -29,7 +31,8 @@ self.addEventListener('activate', (e) => {
 
 // Network first, so updates show up; fall back to the cache when offline.
 self.addEventListener('fetch', (e) => {
-  if (e.request.method !== 'GET') return;
+  // Only the app's own files; Firebase traffic goes straight to the network.
+  if (e.request.method !== 'GET' || new URL(e.request.url).origin !== location.origin) return;
   e.respondWith(
     fetch(e.request)
       .then((res) => {
