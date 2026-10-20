@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>פינת החי</title>
+  <meta http-equiv="refresh" content="2; url=https://pinat-hai.web.app/">
+  <script>
+    // The site moved. Keep the board code of devices that already joined here.
+    var q = location.search;
+    try {
+      if (!/[?&]class=/.test(q)) {
+        var c = localStorage.getItem('petting-zoo-class');
+        if (c) q = (q ? q + '&' : '?') + 'class=' + encodeURIComponent(c);
+      }
+    } catch (e) {}
+    location.replace('https://pinat-hai.web.app/' + q);
+  </script>
+</head>
+<body style="font-family: sans-serif; text-align: center; padding: 40px;">
+  <p>פינת החי עברה לכתובת חדשה: <a href="https://pinat-hai.web.app/">pinat-hai.web.app</a></p>
+</body>
+</html>

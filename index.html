@@ -2,185 +2,22 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#4c9a2a">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="פינת החי">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>פינת החי</title>
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="icons/icon-192.png">
-  <link rel="stylesheet" href="styles.css">
+  <meta http-equiv="refresh" content="2; url=https://pinat-hai.web.app/">
+  <script>
+    // The site moved. Keep the board code of devices that already joined here.
+    var q = location.search;
+    try {
+      if (!/[?&]class=/.test(q)) {
+        var c = localStorage.getItem('petting-zoo-class');
+        if (c) q = (q ? q + '&' : '?') + 'class=' + encodeURIComponent(c);
+      }
+    } catch (e) {}
+    location.replace('https://pinat-hai.web.app/' + q);
+  </script>
 </head>
-<body>
-  <header class="top">
-    <div class="brand">
-      <span class="brand-icon" aria-hidden="true">🐰</span>
-      <div>
-        <h1>פינת החי</h1>
-        <p id="weekRange" class="week-range"></p>
-      </div>
-      <button id="soundToggle" class="sound-toggle" type="button">🔊</button>
-    </div>
-  </header>
-
-  <div id="screen-loading" class="loading">
-    <div class="loading-icon" aria-hidden="true">🐰</div>
-    <p id="loadingText">טוען…</p>
-  </div>
-
-  <!-- Join with a class code, or teacher login -->
-  <main id="screen-welcome" class="welcome" hidden>
-    <button id="welcomeBack" class="btn btn-ghost back-btn" type="button" hidden>→ חזרה ללוח</button>
-    <p id="welcomeMsg" class="notice" hidden></p>
-
-    <section class="card">
-      <h2>🧒 הצטרפות לפינת החי</h2>
-      <p class="hint">מקלידים פעם אחת את הקוד מהמורה – וזהו, המכשיר זוכר אותו.</p>
-      <form id="joinForm" class="add-form" autocomplete="off" novalidate>
-        <input id="codeInput" type="text" dir="ltr" maxlength="12" placeholder="ABCD-1234" aria-label="קוד פינת החי" autocapitalize="characters" autocomplete="off" spellcheck="false">
-        <button class="btn btn-primary" type="submit">הצטרפות</button>
-      </form>
-    </section>
-
-    <!-- Teacher (admin): sign in with the board code + password -->
-    <section class="card" id="loginCard">
-      <h2>👩‍🏫 כניסת מורה</h2>
-      <p class="hint">רק המורה צריכה סיסמה. היא מנהלת את רשימת הילדים והשיבוץ.</p>
-      <form id="loginForm" class="login-form" autocomplete="on" novalidate>
-        <label class="field-label" for="loginCode">קוד הלוח</label>
-        <input id="loginCode" type="text" dir="ltr" maxlength="12" placeholder="ABCD-1234" autocapitalize="characters" autocomplete="username" spellcheck="false">
-        <label class="field-label" for="loginPassword">סיסמת מורה</label>
-        <input id="loginPassword" type="password" dir="ltr" autocomplete="current-password">
-        <div class="actions">
-          <button class="btn btn-primary" type="submit">כניסה</button>
-        </div>
-      </form>
-      <button id="showCreate" class="btn-link" type="button">עוד אין לכם לוח? פתיחת לוח חדש</button>
-    </section>
-
-    <!-- Teacher (admin): create a new board -->
-    <section class="card" id="createCard" hidden>
-      <h2>✨ פתיחת לוח חדש</h2>
-      <p class="hint">בחרו סיסמת מורה (לפחות 6 תווים). אין צורך באימייל או בפרטים אישיים.</p>
-      <form id="createForm" class="login-form" autocomplete="on" novalidate>
-        <label class="field-label" for="createPassword">סיסמת מורה</label>
-        <input id="createPassword" type="password" dir="ltr" autocomplete="new-password">
-        <label class="field-label" for="createPassword2">הקלידו שוב את הסיסמה</label>
-        <input id="createPassword2" type="password" dir="ltr" autocomplete="new-password">
-        <p class="notice small">✍️ רשמו את הסיסמה במקום בטוח – בלי אימייל אין אפשרות לשחזר אותה.</p>
-        <div class="actions">
-          <button class="btn btn-primary" type="submit">יצירת הלוח</button>
-          <button id="hideCreate" class="btn btn-ghost" type="button">ביטול</button>
-        </div>
-      </form>
-    </section>
-    <p class="hint small center"><a href="privacy.html">מדיניות פרטיות</a></p>
-  </main>
-
-  <div id="screen-app" hidden>
-    <nav class="tabs" role="tablist">
-      <button class="tab" role="tab" data-tab="board"><span aria-hidden="true">📅</span> לוח השבוע</button>
-      <button class="tab" role="tab" data-tab="kids"><span aria-hidden="true">🧒</span> המשימות שלי</button>
-      <button class="tab" role="tab" data-tab="manage"><span aria-hidden="true">⚙️</span> הילדים</button>
-    </nav>
-
-    <main>
-      <!-- Weekly board: days down the side, tasks across the top -->
-      <section id="tab-board" class="panel" hidden>
-        <div class="panel-head">
-          <h2>מי עושה מה השבוע?</h2>
-          <button id="editToggle" class="btn btn-ghost" type="button" hidden>✏️ שינוי שיבוץ</button>
-        </div>
-        <p class="hint" id="boardHint">לחצו על המשימה כשסיימתם – ותקבלו מדליית זהב! 🥇</p>
-        <div class="table-wrap">
-          <table class="board" id="boardTable"></table>
-        </div>
-      </section>
-
-      <!-- Per-child table: children down the side, days across the top -->
-      <section id="tab-kids" class="panel" hidden>
-        <div class="panel-head">
-          <h2>המשימות של כל ילד</h2>
-        </div>
-        <p class="hint">
-          <span class="legend">🥕 האכלה</span>
-          <span class="legend">💧 השקיה</span>
-          <span class="legend">🧹 ניקיון</span>
-          <span class="legend"><img class="hamster legend-hamster" src="img/hamster-up.svg" alt=""> בוצע</span>
-          <span class="legend"><img class="hamster legend-hamster" src="img/hamster-down.svg" alt=""> לא בוצע</span>
-        </p>
-        <div class="table-wrap">
-          <table class="kids" id="kidsTable"></table>
-        </div>
-      </section>
-
-      <!-- Names, sharing and account -->
-      <section id="tab-manage" class="panel" hidden>
-        <div class="panel-head">
-          <h2>הילדים בפינת החי</h2>
-        </div>
-        <form id="addForm" class="add-form teacher-only" autocomplete="off" novalidate>
-          <input id="nameInput" type="text" maxlength="20" placeholder="שם הילד/ה" aria-label="שם הילד/ה">
-          <button class="btn btn-primary" type="submit">➕ הוספה</button>
-        </form>
-        <ul id="childList" class="child-list"></ul>
-
-        <div class="actions teacher-only">
-          <button id="reshuffleBtn" class="btn btn-ghost" type="button">🔀 שיבוץ מחדש של השבוע</button>
-          <button id="resetMedalsBtn" class="btn btn-ghost danger" type="button">🔄 איפוס כל המדליות</button>
-        </div>
-        <p class="hint small">הלוח מתאפס אוטומטית בסוף יום שישי, ומתחיל שבוע חדש עם שיבוץ חדש. המדליות נשמרות.</p>
-
-        <section class="card teacher-only">
-          <h3>📲 חיבור מכשירים נוספים</h3>
-          <p>קוד פינת החי: <strong id="classCode" class="class-code" dir="ltr"></strong></p>
-          <p class="hint small">שלחו את הקישור לילדים, להורים או לטאבלט של הכיתה – כולם יראו את אותו הלוח ויוכלו לסמן משימות. רק אתם יכולים לשנות שמות ושיבוץ.</p>
-          <button id="shareBtn" class="btn btn-primary" type="button">📤 שיתוף הקישור</button>
-        </section>
-
-        <section class="card teacher-only">
-          <h3>👩‍🏫 חשבון המורה</h3>
-          <p class="hint small">אתם מחוברים כמורה של הלוח הזה.</p>
-          <div class="actions">
-            <button id="logoutBtn" class="btn btn-ghost" type="button">יציאה מהחשבון</button>
-            <button id="deleteAccountBtn" class="btn btn-ghost danger" type="button">🗑️ מחיקת החשבון וכל המידע</button>
-          </div>
-        </section>
-
-        <section class="card guest-only">
-          <h3>👩‍🏫 מורה?</h3>
-          <p class="hint small">רק המורה יכולה להוסיף ולהסיר ילדים ולשנות את השיבוץ.</p>
-          <div class="actions">
-            <button id="teacherLoginBtn" class="btn btn-primary" type="button">כניסת מורה</button>
-            <button id="leaveBtn" class="btn btn-ghost" type="button">התנתקות מפינת החי</button>
-          </div>
-        </section>
-        <p class="hint small center"><a href="privacy.html">מדיניות פרטיות</a></p>
-      </section>
-    </main>
-  </div>
-
-  <div id="toast" class="toast" hidden role="status"></div>
-
-  <div id="celebrate" class="celebrate" hidden aria-live="polite">
-    <div class="celebrate-card">
-      <div class="medal" aria-hidden="true"><img src="img/hamster-up.svg" alt=""><span>🥇</span></div>
-      <p id="celebrateText"></p>
-    </div>
-  </div>
-
-  <div id="modal" class="modal" hidden role="dialog" aria-modal="true">
-    <div class="modal-card">
-      <p id="modalText"></p>
-      <div class="modal-actions">
-        <button id="modalYes" class="btn btn-primary" type="button">כן</button>
-        <button id="modalNo" class="btn btn-ghost" type="button">ביטול</button>
-      </div>
-    </div>
-  </div>
-
-  <script type="module" src="app.js"></script>
+<body style="font-family: sans-serif; text-align: center; padding: 40px;">
+  <p>פינת החי עברה לכתובת חדשה: <a href="https://pinat-hai.web.app/">pinat-hai.web.app</a></p>
 </body>
 </html>
